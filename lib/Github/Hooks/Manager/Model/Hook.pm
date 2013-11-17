@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use utf8;
 
+use Array::Diff;
 use Scalar::Util ();
 use JSON::XS;
 
@@ -49,6 +50,17 @@ sub supported_events {
     for my $hook (@$hooks) {
         return $hook->{supported_events} if $hook->{name} eq $self->hook_name;
     }
+}
+
+sub update_events {
+    my ($self, @events) = @_;
+
+    my $diff = Array::Diff->diff([sort @{$self->events}], [sort @events]);
+
+    $self->add_events(@{ $diff->added });
+    my $res = $self->remove_events(@{ $diff->deleted });
+
+    $res;
 }
 
 sub add_events {
