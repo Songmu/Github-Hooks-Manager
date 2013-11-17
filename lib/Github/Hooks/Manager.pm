@@ -5,8 +5,6 @@ use warnings;
 our $VERSION = "0.01";
 
 use parent 'Puncheur';
-use Furl;
-use JSON::XS;
 
 use Github::Hooks::Manager::Model::Repository;
 
@@ -14,7 +12,8 @@ __PACKAGE__->load_plugins('JSON');
 
 sub repo {
     my $self = shift;
-    Github::Hooks::Manager::Model::Repository->new(
+
+    $self->{repo} ||= Github::Hooks::Manager::Model::Repository->new(
         user       => $self->config->{user},
         password   => $self->config->{password},
         owner      => $self->config->{organization} // $self->config->{user},

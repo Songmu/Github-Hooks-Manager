@@ -43,9 +43,7 @@ sub events {
 sub supported_events {
     my $self = shift;
 
-    my $res = $self->repo->furl->get('https://api.github.com/hooks');
-    $res->is_success or die $res->content;
-
+    my $res = $self->repo->request(method => 'GET', url => 'https://api.github.com/hooks');
     my $hooks = decode_json $res->content;
     for my $hook (@$hooks) {
         return $hook->{supported_events} if $hook->{name} eq $self->hook_name;
