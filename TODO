@@ -1,0 +1,7 @@
+ETag:"093793307fcefe82315eecb90e677e97"
+Last-Modified:Tue, 12 Nov 2013 20:37:21 GMT
+
+If-Modified-Since:Tue, 12 Nov 2013 20:37:21 GMT
+If-None-Match:"093793307fcefe82315eecb90e677e97"
+
+とか付けて、304をケアする
