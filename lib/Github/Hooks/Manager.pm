@@ -42,6 +42,12 @@ get '/:hook_id/events' => sub {
     $c->res_json($c->repo->hook($args->{hook_id})->events);
 };
 
+get '/:hook_id/supported_events' => sub {
+    my ($c, $args) = @_;
+
+    $c->res_json($c->repo->hook($args->{hook_id})->supported_events);
+};
+
 1;
 __END__
 

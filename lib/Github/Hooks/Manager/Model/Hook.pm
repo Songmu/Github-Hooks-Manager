@@ -51,4 +51,28 @@ sub supported_events {
     }
 }
 
+sub add_events {
+    my ($self, @events) = @_;
+
+    my $body = encode_json {add_events => [@events]};
+
+    $self->repo->request(
+        method  => 'PATCH',
+        url     => $self->hook_url,
+        content => $body,
+    );
+}
+
+sub remove_events {
+    my ($self, @events) = @_;
+
+    my $body = encode_json {remove_events => [@events]};
+
+    $self->repo->request(
+        method  => 'PATCH',
+        url     => $self->hook_url,
+        content => $body,
+    );
+}
+
 1;
