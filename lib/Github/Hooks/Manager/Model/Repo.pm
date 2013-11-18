@@ -20,9 +20,9 @@ sub _furl {
     state $f = Furl->new;
 }
 
-sub authorization {
+sub _authorization {
     my $self = shift;
-    $self->{authorization} ||= [Authorization => 'Basic ' . encode_base64(sprintf "%s:%s", $self->user, $self->password)];
+    $self->{_authorization} ||= [Authorization => 'Basic ' . encode_base64(sprintf "%s:%s", $self->user, $self->password)];
 }
 
 sub _request_cache {
@@ -40,7 +40,7 @@ sub request {
     my $self = shift;
 
     my %args = @_;
-    push @{ $args{headers} }, @{ $self->authorization };
+    push @{ $args{headers} }, @{ $self->_authorization };
     my $url = $args{url};
     $args{method} = uc $args{method};
 
