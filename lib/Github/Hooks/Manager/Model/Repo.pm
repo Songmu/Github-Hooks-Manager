@@ -16,7 +16,7 @@ use Class::Accessor::Lite (
     ro  => [qw/user password owner repository/],
 );
 
-sub furl {
+sub _furl {
     state $f = Furl->new;
 }
 
@@ -27,12 +27,13 @@ sub authorization {
 
 sub _request_cache {
     my ($self, $key, $val) = @_;
-    $self->{_request_cache} ||= {};
+
+    state $cache = {};
 
     if ($val) {
-        $self->{_request_cache}{$key} = $val;
+        $cache->{$key} = $val;
     }
-    $self->{_request_cache}{$key};
+    $cache->{$key};
 }
 
 sub request {
@@ -43,27 +44,28 @@ sub request {
     my $url = $args{url};
     $args{method} = uc $args{method};
 
-    if ($args{method} eq 'GET' and my $cache = $self->_request_cache($url) ) {
-        $args{headers}{'If-None-Match'}     = $cache->{'ETag'}          if $cache->{'ETag'};
-        $args{headers}{'If-Modified-Since'} = $cache->{'Last-Modified'} if $cache->{'Last-Modified'};
+    if ($args{method} eq 'GET' && (my $cache = $self->_request_cache($url)) ) {
+        push @{ $args{headers} }, ('If-None-Match',     $cache->{'etag'})          if $cache->{'etag'};
+        push @{ $args{headers} }, ('If-Modified-Since', $cache->{'last-modified'}) if $cache->{'last-modified'};
     }
 
-    my $res = furl->request(%args);
-    $res->is_success or die Dumper $res;
-
+    my $res = _furl->request(%args);
     my $res_data;
     if ($res->code == 304) {
         $res_data = $self->_request_cache($url)->{content};
     }
-    else {
+    elsif ($res->is_success) {
         $res_data = decode_json $res->content;
-        if ($args{method} eq 'GET' && ($res->header('Etag') || $res->header('Last-Modified')) ) {
-            $self->_request_cache($url, {
-                'ETag'          => $res->header('Etag')          || undef,
-                'Last-Modified' => $res->header('Last-Modified') || undef,
+        if ($args{method} eq 'GET' && ($res->header('etag') || $res->header('last-modified')) ) {
+            $self->_request_cache($url, +{
+                'etag'          => $res->header('etag')          || undef,
+                'last-modified' => $res->header('last-modified') || undef,
                 'content'       => $res_data,
             });
         }
+    }
+    else {
+        die Dumper $res;
     }
     $res_data;
 }
