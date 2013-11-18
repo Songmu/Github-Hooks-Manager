@@ -34,20 +34,25 @@ get '/' => sub {
 get '/:hook_id/' => sub {
     my ($c, $args) = @_;
 
-    $c->res_json($c->repo->hook($args->{hook_id})->info);
+    my $hook = $c->repo->hook($args->{hook_id});
+    my $form = $hook->events_form($c->req);
+
+    $c->render('hook.tx', {
+        repo => $c->repo,
+        hook => $hook,
+        form => $form,
+    });
+};
+
+post '/:hook_id/' => sub {
+    my ($c, $args) = @_;
+
 };
 
 get '/:hook_id/events' => sub {
     my ($c, $args) = @_;
 
     $c->res_json($c->repo->hook($args->{hook_id})->events);
-};
-
-
-post '/:hook_id/events' => sub {
-    my ($c, $args) = @_;
-
-
 };
 
 get '/:hook_id/supported_events' => sub {

@@ -1,5 +1,10 @@
 : cascade base
 : around content -> {
 
+<ul>
+: for $repo.hooks -> $hook {
+<li><a href="<: '/' ~ $hook.hook_id ~ '/' | uri_for :>"><: $hook.hook_id :></a>
+: }
+</ul>
 
 : }

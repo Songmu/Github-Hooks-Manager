@@ -5,6 +5,8 @@ use utf8;
 
 use Array::Diff;
 use JSON::XS;
+use HTML::Shakan;
+use HTML::Shakan::Field::Choice;
 
 use Class::Accessor::Lite (
     new => 1,
@@ -73,6 +75,25 @@ sub remove_events {
         method  => 'PATCH',
         url     => $self->hook_url,
         content => $body,
+    );
+}
+
+sub events_form {
+    my ($self, $req) = @_;
+
+    HTML::Shakan->new(
+        fields  => [$self->_events_form_field],
+        request => $req,
+    );
+}
+
+sub _events_form_field {
+    my $self = shift;
+
+    HTML::Shakan::Field::Choice->new(
+        name    => 'events',
+        choices => [map {($_ => $_)} @{$self->supported_events}],
+        widget  => 'checkbox',
     );
 }
 
