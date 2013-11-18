@@ -26,7 +26,9 @@ use Puncheur::Dispatcher::Lite;
 get '/' => sub {
     my $c = shift;
 
-    $c->res_json($c->repo->raw_hooks);
+    $c->render('index.tx', {
+        repo => $c->repo,
+    });
 };
 
 get '/:hook_id/' => sub {
@@ -39,6 +41,13 @@ get '/:hook_id/events' => sub {
     my ($c, $args) = @_;
 
     $c->res_json($c->repo->hook($args->{hook_id})->events);
+};
+
+
+post '/:hook_id/events' => sub {
+    my ($c, $args) = @_;
+
+
 };
 
 get '/:hook_id/supported_events' => sub {
