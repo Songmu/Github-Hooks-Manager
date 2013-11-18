@@ -27,8 +27,7 @@ sub hook_url {
 sub info {
     my $self = shift;
 
-    my $res = $self->repo->request(method => 'GET', url => $self->hook_url);
-    decode_json $res->content;
+    $self->repo->request(method => 'GET', url => $self->hook_url);
 }
 
 sub hook_name {
@@ -43,8 +42,7 @@ sub events {
 sub supported_events {
     my $self = shift;
 
-    my $res = $self->repo->request(method => 'GET', url => 'https://api.github.com/hooks');
-    my $hooks = decode_json $res->content;
+    my $hooks = $self->repo->request(method => 'GET', url => 'https://api.github.com/hooks');
     for my $hook (@$hooks) {
         return $hook->{supported_events} if $hook->{name} eq $self->hook_name;
     }
