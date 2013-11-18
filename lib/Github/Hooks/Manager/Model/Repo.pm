@@ -1,4 +1,4 @@
-package Github::Hooks::Manager::Model::Repository;
+package Github::Hooks::Manager::Model::Repo;
 use feature ':5.10';
 use strict;
 use warnings;

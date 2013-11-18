@@ -6,14 +6,14 @@ our $VERSION = "0.01";
 
 use parent 'Puncheur';
 
-use Github::Hooks::Manager::Model::Repository;
+use Github::Hooks::Manager::Model::Repo;
 
 __PACKAGE__->load_plugins('JSON');
 
 sub repo {
     my $self = shift;
 
-    $self->{repo} ||= Github::Hooks::Manager::Model::Repository->new(
+    $self->{repo} ||= Github::Hooks::Manager::Model::Repo->new(
         user       => $self->config->{user},
         password   => $self->config->{password},
         owner      => $self->config->{organization} // $self->config->{user},
