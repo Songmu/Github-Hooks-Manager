@@ -4,19 +4,12 @@ use warnings;
 use utf8;
 
 use Array::Diff;
-use Scalar::Util ();
 use JSON::XS;
 
 use Class::Accessor::Lite (
+    new => 1,
     ro  => [qw/repo hook_id/],
 );
-
-sub new {
-    my ($class, %args) = @_;
-    my $self = +{%args};
-    Scalar::Util::weaken $self->{repo};
-    bless $self, $class;
-}
 
 sub hook_url {
     my $self = shift;
