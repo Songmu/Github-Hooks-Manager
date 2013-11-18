@@ -82,8 +82,9 @@ sub events_form {
     my ($self, $req) = @_;
 
     HTML::Shakan->new(
-        fields  => [$self->_events_form_field],
-        request => $req,
+        fields        => [$self->_events_form_field],
+        request       => $req,
+        fillin_params => {events => $self->events},
     );
 }
 

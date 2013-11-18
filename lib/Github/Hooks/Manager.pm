@@ -47,18 +47,13 @@ get '/:hook_id/' => sub {
 post '/:hook_id/' => sub {
     my ($c, $args) = @_;
 
-};
+    my $hook = $c->repo->hook($args->{hook_id});
+    my $form = $hook->events_form($c->req);
 
-get '/:hook_id/events' => sub {
-    my ($c, $args) = @_;
-
-    $c->res_json($c->repo->hook($args->{hook_id})->events);
-};
-
-get '/:hook_id/supported_events' => sub {
-    my ($c, $args) = @_;
-
-    $c->res_json($c->repo->hook($args->{hook_id})->supported_events);
+    #if ($form->submitted_and_valid) {
+        $hook->update_events(@{ $form->param('events') });
+    #}
+    $c->redirect('/'. $hook->hook_id . '/');
 };
 
 1;

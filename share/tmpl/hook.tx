@@ -1,6 +1,9 @@
 : cascade base
 : around content -> {
 
-<: $form.render | mark_raw :>
+<form method="POST" action="">
+    <: $form.render | mark_raw :>
+    <input type="submit" value="update">
+</form>
 
 : }
