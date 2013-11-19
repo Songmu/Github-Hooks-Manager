@@ -83,7 +83,13 @@ sub raw_hooks {
 
 sub hooks {
     my $self = shift;
-    [map {Github::Hooks::Manager::Model::Hook->new(hook_id => $_->{id}, repo => $self)} @{ $self->raw_hooks } ];
+    [map {
+        Github::Hooks::Manager::Model::Hook->new(
+            hook_id => $_->{id},
+            repo    => $self,
+            info    => $_,
+        )} @{ $self->raw_hooks }
+    ];
 }
 
 sub hook {
