@@ -78,7 +78,7 @@ sub hook_url {
 sub raw_hooks {
     my $self = shift;
 
-    $self->request(method => 'GET', url => $self->hook_url);
+    $self->{raw_hooks} ||= $self->request(method => 'GET', url => $self->hook_url);
 }
 
 sub hooks {

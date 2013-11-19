@@ -5,8 +5,7 @@ use utf8;
 
 use Array::Diff;
 use JSON::XS;
-use HTML::Shakan;
-use HTML::Shakan::Field::Choice;
+use HTML::Shakan ();
 
 use Class::Accessor::Lite (
     new => 1,
@@ -22,7 +21,7 @@ sub hook_url {
 sub info {
     my $self = shift;
 
-    $self->repo->request(method => 'GET', url => $self->hook_url);
+    $self->{info} ||= $self->repo->request(method => 'GET', url => $self->hook_url);
 }
 
 sub hook_name {
@@ -37,10 +36,12 @@ sub events {
 sub supported_events {
     my $self = shift;
 
-    my $hooks = $self->repo->request(method => 'GET', url => 'https://api.github.com/hooks');
-    for my $hook (@$hooks) {
-        return $hook->{supported_events} if $hook->{name} eq $self->hook_name;
-    }
+    $self->{supported_events} ||= sub {
+        my $hooks = $self->repo->request(method => 'GET', url => 'https://api.github.com/hooks');
+        for my $hook (@$hooks) {
+            return $hook->{supported_events} if $hook->{name} eq $self->hook_name;
+        }
+    }->();
 }
 
 sub update_events {
