@@ -50,9 +50,9 @@ post '/:hook_id/' => sub {
     my $hook = $c->repo->hook($args->{hook_id});
     my $form = $hook->events_form($c->req);
 
-    #if ($form->submitted_and_valid) {
-        $hook->update_events(@{ $form->param('events') });
-    #}
+    if ($form->submitted_and_valid) {
+        $hook->update_events($form->param('events'));
+    }
     $c->redirect('/'. $hook->hook_id . '/');
 };
 
