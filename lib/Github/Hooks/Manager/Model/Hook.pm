@@ -48,8 +48,8 @@ sub update_events {
 
     my $diff = Array::Diff->diff([sort @{$self->events}], [sort @events]);
 
-    $self->add_events(@{ $diff->added });
-    my $res = $self->remove_events(@{ $diff->deleted });
+    $self->add_events(@{ $diff->added })                if @{ $diff->added };
+    my $res = $self->remove_events(@{ $diff->deleted }) if @{ $diff->deleted };
 
     $res;
 }
