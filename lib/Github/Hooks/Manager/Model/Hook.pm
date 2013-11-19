@@ -29,6 +29,14 @@ sub hook_name {
     $self->{hook_name} ||= $self->info->{name};
 }
 
+sub subject {
+    my $self = shift;
+
+    for my $key (keys %{ $self->info->{config} }) {
+        return $self->info->{config}{$key} if $key =~ /(?:url|server)/i;
+    }
+}
+
 sub events {
     shift->info->{events};
 }
