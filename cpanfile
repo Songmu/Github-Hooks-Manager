@@ -1,5 +1,4 @@
 requires 'Array::Diff';
-requires 'Config::PL';
 requires 'Config::Pit';
 requires 'Class::Accessor::Lite';
 requires 'Furl';

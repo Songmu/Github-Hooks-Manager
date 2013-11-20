@@ -6,18 +6,27 @@ use Puncheur::Runner;
 use Config::Pit;
 use Config::PL;
 
+use Getopt::Long qw/:config posix_default no_ignore_case bundling auto_help pass_through/;
+use Pod::Usage qw/pod2usage/;
+
+GetOptions(\my %opt, qw/
+    repository=s
+    organization=s
+/) or pod2usage(1);
+
+die 'repository option is required' unless $opt{repository};
+
 my $github_config = pit_get('api.github.com', require => {
     user     => 'input your github username',
     password => 'input your github password',
 });
-my %config = config_do 'config/private.pl';
 
 Puncheur::Runner->new('Github::Hooks::Manager', {
     port => 2299,
 })->run(
     config => {
         %$github_config,
-        %config,
+        %opt,
     },
     handle_static => 1,
 );
