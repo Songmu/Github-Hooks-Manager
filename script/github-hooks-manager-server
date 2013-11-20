@@ -1,0 +1,22 @@
+#!perl
+use strict;
+use warnings;
+use Puncheur::Runner;
+
+use Config::Pit;
+use Config::PL;
+
+my $github_config = pit_get('api.github.com', require => {
+    user     => 'input your github username',
+    password => 'input your github password',
+});
+my %config = config_do 'config/private.pl';
+
+Puncheur::Runner->new('Github::Hooks::Manager', {
+    port => 2299,
+})->run(
+    config => {
+        %$github_config,
+        %config,
+    },
+);
