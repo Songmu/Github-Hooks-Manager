@@ -19,4 +19,5 @@ Puncheur::Runner->new('Github::Hooks::Manager', {
         %$github_config,
         %config,
     },
+    handle_static => 1,
 );

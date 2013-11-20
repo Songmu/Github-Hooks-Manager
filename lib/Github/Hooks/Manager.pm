@@ -8,7 +8,7 @@ use parent 'Puncheur';
 
 use Github::Hooks::Manager::Model::Repo;
 
-__PACKAGE__->load_plugins('JSON');
+__PACKAGE__->load_plugins('HandleStatic');
 
 sub repo {
     my $self = shift;
