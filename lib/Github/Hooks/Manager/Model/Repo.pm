@@ -78,12 +78,18 @@ sub hook_url {
 sub raw_hooks {
     my $self = shift;
 
-    $self->request(method => 'GET', url => $self->hook_url);
+    $self->{raw_hooks} ||= $self->request(method => 'GET', url => $self->hook_url);
 }
 
 sub hooks {
     my $self = shift;
-    [map {Github::Hooks::Manager::Model::Hook->new(hook_id => $_->{id}, repo => $self)} @{ $self->raw_hooks } ];
+    [map {
+        Github::Hooks::Manager::Model::Hook->new(
+            hook_id => $_->{id},
+            repo    => $self,
+            info    => $_,
+        )} @{ $self->raw_hooks }
+    ];
 }
 
 sub hook {

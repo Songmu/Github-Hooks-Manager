@@ -1,10 +1,14 @@
 : cascade base
 : around content -> {
 
-<ul>
+<table>
 : for $repo.hooks -> $hook {
-<li><a href="<: '/' ~ $hook.hook_id ~ '/' | uri_for :>"><: $hook.hook_id :></a>
+<tr>
+    <td><: $hook.hook_name :></td>
+    <td><a href="<: '/' ~ $hook.hook_id ~ '/' | uri_for :>"><: $hook.hook_id :></a></td>
+    <td><: $hook.subject :></td>
+</tr>
 : }
-</ul>
+</table>
 
 : }

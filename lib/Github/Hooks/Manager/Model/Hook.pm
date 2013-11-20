@@ -5,8 +5,7 @@ use utf8;
 
 use Array::Diff;
 use JSON::XS;
-use HTML::Shakan;
-use HTML::Shakan::Field::Choice;
+use HTML::Shakan ();
 
 use Class::Accessor::Lite (
     new => 1,
@@ -22,12 +21,20 @@ sub hook_url {
 sub info {
     my $self = shift;
 
-    $self->repo->request(method => 'GET', url => $self->hook_url);
+    $self->{info} ||= $self->repo->request(method => 'GET', url => $self->hook_url);
 }
 
 sub hook_name {
     my $self = shift;
     $self->{hook_name} ||= $self->info->{name};
+}
+
+sub subject {
+    my $self = shift;
+
+    for my $key (keys %{ $self->info->{config} }) {
+        return $self->info->{config}{$key} if $key =~ /(?:url|server)/i;
+    }
 }
 
 sub events {
@@ -37,10 +44,12 @@ sub events {
 sub supported_events {
     my $self = shift;
 
-    my $hooks = $self->repo->request(method => 'GET', url => 'https://api.github.com/hooks');
-    for my $hook (@$hooks) {
-        return $hook->{supported_events} if $hook->{name} eq $self->hook_name;
-    }
+    $self->{supported_events} ||= sub {
+        my $hooks = $self->repo->request(method => 'GET', url => 'https://api.github.com/hooks');
+        for my $hook (@$hooks) {
+            return $hook->{supported_events} if $hook->{name} eq $self->hook_name;
+        }
+    }->();
 }
 
 sub update_events {
@@ -48,8 +57,8 @@ sub update_events {
 
     my $diff = Array::Diff->diff([sort @{$self->events}], [sort @events]);
 
-    $self->add_events(@{ $diff->added });
-    my $res = $self->remove_events(@{ $diff->deleted });
+    $self->add_events(@{ $diff->added })                if @{ $diff->added };
+    my $res = $self->remove_events(@{ $diff->deleted }) if @{ $diff->deleted };
 
     $res;
 }

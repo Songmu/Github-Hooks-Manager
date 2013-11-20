@@ -1,6 +1,9 @@
 : cascade base
 : around content -> {
 
+<h2><: $hook.hook_id :>(<: $hook.hook_name :>)</h2>
+<h3><: $hook.subject :></h3>
+
 <form method="POST" action="">
     <: $form.render | mark_raw :>
     <input type="submit" value="update">
