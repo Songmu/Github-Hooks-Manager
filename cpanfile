@@ -1,4 +1,6 @@
 requires 'Array::Diff';
+requires 'Config::PL';
+requires 'Config::Pit';
 requires 'Class::Accessor::Lite';
 requires 'Furl';
 requires 'HTML::Shakan', '2.00';
