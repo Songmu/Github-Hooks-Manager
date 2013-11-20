@@ -1,7 +1,7 @@
 requires 'Array::Diff';
 requires 'Class::Accessor::Lite';
 requires 'Furl';
-requires 'HTML::Shakan', '1.999';
+requires 'HTML::Shakan', '2.00';
 requires 'JSON::XS';
 requires 'MIME::Base64';
 requires 'Puncheur';
@@ -11,7 +11,7 @@ on configure => sub {
     requires 'CPAN::Meta';
     requires 'CPAN::Meta::Prereqs';
     requires 'Module::Build';
-    requires 'perl', '5.008_001';
+    requires 'perl', '5.010_001';
 };
 
 on test => sub {
